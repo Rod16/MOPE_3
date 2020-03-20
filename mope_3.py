@@ -95,15 +95,20 @@ dlist = [d1, d2, d3, d4]
 m = 3
 Gp = max(dlist)/sum(dlist)
 print("f1 = 2, f2 = 4")
-f1 = m-1
-f2 = N = 4
-print("Gp = ",Gp)
-Gt = 0.7679
-print("Gt = 0.7679")
-if Gp < Gt:
-    print("Gp < Gt, дисперсія є однорідною за критерієм Кохрена")
-else:
-    print("Gp > Gt, дисперсія є неоднорідною за критерієм Кохрена")
+for i in range(m, 10, 1):
+    f1 = m-1
+    f2 = N = 4
+    print("Gp = ",Gp)
+    Gt = 0.7679
+    print("Gt = 0.7679")
+    if Gp < Gt:
+        print("Gp < Gt, дисперсія є однорідною за критерієм Кохрена при m = ", m)
+        break
+    else:
+        print("Gp > Gt, дисперсія є неоднорідною за критерієм Кохрена при m = ", m)
+        m = m + 1
+        print("\n")
+        continue
 print("\n")
 print("Критерій Стьюдента:")
 sb = sum(dlist)/N
@@ -149,19 +154,14 @@ print(d," значимих коефіцієнтів")
 f4 = N - d
 print("f4 = ", f4)
 print("d1=", round(d1, 2), "d2=", round(d2, 2), "d3=", round(d3, 2), "d4=", round(d4, 2), "d5=", round(sb, 2))
-for i in range(m,0,-1):
-    sad = ((yy1 - y1av1)**2 + (yy2 - y2av2)**2 + (yy3 - y3av3)**2 + (yy4 - y4av4)**2)*(m/(N-d))
-    Fp = sad/sb
-    print("Fp=", round(Fp,2))
-    print('Ft - беремo із таблиці 8 рядoк, 2 стовпець - Ft = 4.5')
-    Ft=4.5
-    if Fp>Ft:
-        print("Fp=",round(Fp,2),"> Ft",Ft,"Рівняння не є адекватним оригіналу при m = ",m)
-        m=m-1
-        print("\n")
-        continue
+sad = ((yy1 - y1av1)**2 + (yy2 - y2av2)**2 + (yy3 - y3av3)**2 + (yy4 - y4av4)**2)*(m/(N-d))
+Fp = sad/sb
+print("Fp=", round(Fp,2))
+print('Ft - беремo із таблиці 8 рядoк, 2 стовпець - Ft = 4.5')
+Ft=4.5
+if Fp>Ft:
+    print("Fp=",round(Fp,2),"> Ft",Ft,"Рівняння не є адекватним оригіналу")
 
+else:
+    print("Fp=",round(Fp,2),"< Ft",Ft,"Рівняння є адекватним оригіналу")
 
-    else:
-        print("Fp=",round(Fp,2),"< Ft",Ft,"Рівняння є адекватним оригіналу при m = ",m)
-        break
