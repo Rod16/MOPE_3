@@ -1,5 +1,6 @@
 from random import *
 import numpy as np
+import scipy.stats
 x1min = 10
 x1max = 50
 x2min = -20
@@ -10,8 +11,7 @@ xAvmax = x1max+x2max+x3max/3
 xAvmin = x1min+x2min+x3min/3
 ymax = int(200+xAvmax)
 ymin = int(200+xAvmin)
-#print(round(xAvmin,2))
-#print(round(xAvmax,2))
+
 
 print("Y max= ",round(ymax,2))
 print("Y min= ",round(ymin,2), "\n")
@@ -90,18 +90,31 @@ d3 = ((Y1[2] - y1av1)**2 + (Y2[2] - y2av2)**2 + (Y3[2] - y3av3)**2)/3
 d4 = ((Y1[3] - y1av1)**2 + (Y2[3] - y2av2)**2 + (Y3[3] - y3av3)**2)/3
 print("d1=", round(d1,2),"d2=", round(d2,2),"d3=", round(d3,2),"d4=", round(d4,2))
 
+
+cohran = {1: 0.9065, 2: 0.7679, 3: 0.6841, 4: 0.6287, 5: 0.5892, 6: 0.5598, 7: 0.5365, 8: 0.5175, 9: 0.5017,
+                 10: 0.4884, range(11, 17): 0.4366, range(17, 37): 0.3720, range(37, 145): 0.3093}
+
 dlist = [d1, d2, d3, d4]
 
 m = 3
 Gp = max(dlist)/sum(dlist)
 print("f1 = 2, f2 = 4")
-for i in range(m, 10, 1):
+q=0.05
+p=1-q
+
+for i in range(m, 20, 1):
     f1 = m-1
     f2 = N = 4
     print("Gp = ",Gp)
-    Gt = 0.7679
-    print("Gt = 0.7679")
-    if Gp < Gt:
+    for key in cohran.keys():
+        if f1 == key:
+            value = cohran.get(key)
+            break
+    else:
+        value = 2500
+    print("Gt = ",value)
+
+    if Gp < value:
         print("Gp < Gt, дисперсія є однорідною за критерієм Кохрена при m = ", m)
         break
     else:
@@ -127,8 +140,9 @@ t3 = abs(beta3)/sbs
 
 
 f3 = f1*f2
-ttabl  = 2.306
-print("f3 = f1*f2 = 8, з таблиці tтабл = 2.306")
+ttabl = scipy.stats.t.ppf((1 + (1 - q)) / 2, f3)
+print("tтабл = ", ttabl)
+print("f3 = f1*f2 = 8")
 print("ts: ",t0,t1,t2,t3)
 if (t0<ttabl):
     print("t0<ttabl, b0 не значимий")
@@ -157,11 +171,10 @@ print("d1=", round(d1, 2), "d2=", round(d2, 2), "d3=", round(d3, 2), "d4=", roun
 sad = ((yy1 - y1av1)**2 + (yy2 - y2av2)**2 + (yy3 - y3av3)**2 + (yy4 - y4av4)**2)*(m/(N-d))
 Fp = sad/sb
 print("Fp=", round(Fp,2))
-print('Ft - беремo із таблиці 8 рядoк, 2 стовпець - Ft = 4.5')
-Ft=4.5
+Ft=scipy.stats.f.ppf(p, f4, f3)
+print("Ft = ",Ft)
 if Fp>Ft:
-    print("Fp=",round(Fp,2),"> Ft",Ft,"Рівняння не є адекватним оригіналу")
+    print("Fp> Ft, рівняння не є адекватним оригіналу")
 
 else:
-    print("Fp=",round(Fp,2),"< Ft",Ft,"Рівняння є адекватним оригіналу")
-
+    print("Fp< Ft, рівняння є адекватним оригіналу")
